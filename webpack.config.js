@@ -36,6 +36,11 @@ var config = {
             index: 'index.html'
         }
   },
+  resolve: {
+    alias: {
+      vendor: path.resolve(__dirname, 'vendor/')
+    }
+  },
 };
 
 module.exports = config;

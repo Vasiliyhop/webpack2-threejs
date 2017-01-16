@@ -4,17 +4,14 @@
   "description": "threejs test",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "./node_modules/.bin/webpack-dev-server",
+    "build": "webpack -p"
   },
   "dependencies": {
     "webpack": "^2.2.0-rc.3",
     "webpack-dev-server": "^2.2.0-rc.0",
     "webpack-path-rewriter": "^1.1.4"
-  },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "./node_modules/.bin/webpack-dev-server",
-    "build": "webpack -p"
   },
   "author": "vasyl shevchuk",
   "license": "ISC"

@@ -1,4 +1,8 @@
-define(['../../vendor/three.min'], function(THREE){
+define([
+	'vendor/three.min', 
+	'vendor/dat.gui.min'
+	//'modules/dat.gui/build/dat.gui.min'
+	], function(THREE, dat){
 	var app = {
 		init: function() {
 			console.log('init');
@@ -65,8 +69,21 @@ define(['../../vendor/three.min'], function(THREE){
 
 			container.appendChild(renderer.domElement);
 
+			var guiControls = new function() {
+				this.rotationX = 0.01;
+				this.rotationY = 0.01;
+				this.rotationZ = 0.01;
+			};
+
+			datGUI = new dat.GUI();
+			datGUI.add(guiControls, 'rotationX', 0, 0.5);
+			datGUI.add(guiControls, 'rotationY', 0, 0.5);
+			datGUI.add(guiControls, 'rotationZ', 0, 0.5);
+
 			function render() {
-			    cube.rotation.y += 0.01;
+			    cube.rotation.x += guiControls.rotationX;
+			    cube.rotation.y += guiControls.rotationY;
+			    cube.rotation.z += guiControls.rotationZ;
 			     
 			    requestAnimationFrame( render );
 			    renderer.render( scene, camera );
