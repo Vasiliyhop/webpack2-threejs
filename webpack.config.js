@@ -26,7 +26,7 @@ var config = {
   plugins: [
     new PathRewriter(),
     new webpack.ProvidePlugin({
-      //$: 'jquery'
+      $: 'jquery'
     })
   ],
   devServer: {

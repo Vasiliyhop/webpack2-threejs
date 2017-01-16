@@ -1,14 +1,13 @@
 define([
 	'vendor/three.min', 
 	'vendor/dat.gui.min'
-	//'modules/dat.gui/build/dat.gui.min'
 	], function(THREE, dat){
 	var app = {
 		init: function() {
 			console.log('init');
 			var width = window.innerWidth,
 				height = window.innerHeight,
-				container = document.getElementById('app-container'),
+				container = $('#app-container'),
 				ratio = width/height,
 				scene = new THREE.Scene(),
 				camera = new THREE.PerspectiveCamera(45, ratio, 0.1, 500),
@@ -18,6 +17,7 @@ define([
 			renderer.setSize(width, height);
 			renderer.shadowMap.enabled = true;
 			renderer.shadowMapSoft = true;
+			renderer.shadowMap.type = THREE.PCFShadowMap;
 
 			var axis = new THREE.AxisHelper(10);
 
@@ -58,8 +58,10 @@ define([
 			light.castShadow = true;
 			light.shadow.camera.near = 8;
 	        light.shadow.camera.far = 30;
-	        light.shadow.mapSize.width = 1024;
-	        light.shadow.mapSize.height = 1024;
+	        light.shadow.camera.fov = 30;
+	        light.shadow.bias = 0.0001;
+	        light.shadow.mapSize.width = 2048;
+	        light.shadow.mapSize.height = 2048;
 	        light.name = 'Spot Light';
 			light.position.set(15, 30, 50);
 			scene.add(light);
@@ -67,7 +69,7 @@ define([
 			camera.position.set(40, 40, 40);
 			camera.lookAt(scene.position);
 
-			container.appendChild(renderer.domElement);
+			container.append(renderer.domElement);
 
 			var guiControls = new function() {
 				this.rotationX = 0.01;

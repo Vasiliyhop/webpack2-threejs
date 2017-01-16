@@ -9,6 +9,7 @@
     "build": "webpack -p"
   },
   "dependencies": {
+    "jquery": "^3.1.1",
     "webpack": "^2.2.0-rc.3",
     "webpack-dev-server": "^2.2.0-rc.0",
     "webpack-path-rewriter": "^1.1.4"
