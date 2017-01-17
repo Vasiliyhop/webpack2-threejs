@@ -1,12 +1,45 @@
 define([
-	'three', 
-	'datgui'
+	'three',
+	'datgui',
+	'colladaLoader'
 	], function(THREE, dat){
 	var game = {
+		before: function() {
+			game.load();
+		},
 		start: function() {
 			game.init();
 			game.create();
 			game.render();
+		},
+		load: function() {
+			var loader = new THREE.ColladaLoader();
+			loader.options.convertUpAxis = true;
+			loader.load('assets/monkey.dae', function(collada){
+				collada.scene.scale.set(5, 5, 5);
+				var objectToRemove = [];
+				collada.scene.traverse(function(child){
+					if (child.colladaId !== 'Suzanne') {
+						objectToRemove.push(child);
+					} else {
+						child.position.set(0, 1.5, 0);
+						game.monkey = child;
+						child.traverse(function(e){
+							e.castShadow = true;
+							e.receiveShadow = true;
+							if (e.material instanceof THREE.MeshPhongMaterial) {
+								e.material.needsUpdate = true;
+							}
+						});
+					}
+				});
+				objectToRemove.forEach(function(object){
+					collada.scene.remove(object);
+				});
+				collada.scene.updateMatrix()
+				game.dae = collada.scene;
+				game.start();
+			});
 		},
 		init: function() {
 			game.width = window.innerWidth,
@@ -24,6 +57,9 @@ define([
 			game.renderer.shadowMap.type = THREE.PCFShadowMap;
 		},
 		create: function() {
+			//dae
+			game.scene.add(game.dae);
+
 			//axis
 			var axis = new THREE.AxisHelper(10);
 			game.scene.add(axis);
@@ -33,21 +69,8 @@ define([
 			var grid = new THREE.GridHelper(50, 5, color, 0x000000);
 			game.scene.add(grid);
 
-			//cube
-			var cubeGeometry = new THREE.BoxGeometry(5, 5, 5);
-			var cubeMaterial = new THREE.MeshPhongMaterial({
-				color: 0xff33000,
-				shininess: 150,
-            	specular: 0x222222,
-				shading: THREE.SmoothShading
-			});
-			game.cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
-			game.cube.position.set(2.5, 5.0, 2.5);
-			game.cube.castShadow = true;
-			game.scene.add(game.cube);
-
 			//plane
-			var planeGeometry = new THREE.PlaneGeometry(30, 30, 30);
+			var planeGeometry = new THREE.PlaneGeometry(60, 60, 60);
 			var planeMaterial = new THREE.MeshPhongMaterial({
 				color: 0xffffff,
 				shininess: 150,
@@ -57,7 +80,7 @@ define([
 			var plane = new THREE.Mesh(planeGeometry, planeMaterial);
 			plane.position.set(0, 0, 0);
 			plane.rotation.x = -0.5*Math.PI;
-			plane.castShadow = false;
+			plane.castShadow = true;
 			plane.receiveShadow = true;
 			game.scene.add(plane);
 
@@ -80,22 +103,22 @@ define([
 
 			//dat.gui
 			game.guiControls = new function() {
-				this.rotationX = 0.01;
+				this.rotationX = 0.00001;
 				this.rotationY = 0.01;
-				this.rotationZ = 0.01;
+				this.rotationZ = 0.00001;
 			};
 			datGUI = new dat.GUI();
-			datGUI.add(game.guiControls, 'rotationX', -0.25, 0.25);
-			datGUI.add(game.guiControls, 'rotationY', -0.25, 0.25);
-			datGUI.add(game.guiControls, 'rotationZ', -0.25, 0.25);
+			datGUI.add(game.guiControls, 'rotationX', -0.1, 0.1);
+			datGUI.add(game.guiControls, 'rotationY', -0.1, 0.1);
+			datGUI.add(game.guiControls, 'rotationZ', -0.1, 0.1);
 
 			//append
 			game.container.append(game.renderer.domElement);
 		},
 		render: function() {
-			game.cube.rotation.x += game.guiControls.rotationX;
-		    game.cube.rotation.y += game.guiControls.rotationY;
-		    game.cube.rotation.z += game.guiControls.rotationZ;
+		 	game.monkey.rotation.x += game.guiControls.rotationX;
+		    game.monkey.rotation.y += game.guiControls.rotationY;
+		    game.monkey.rotation.z += game.guiControls.rotationZ;
 
 		    requestAnimationFrame( game.render );
 		    game.renderer.render( game.scene, game.camera );

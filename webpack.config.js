@@ -28,7 +28,8 @@ var config = {
   plugins: [
     new PathRewriter(),
     new webpack.ProvidePlugin({
-      $: 'jquery'
+      $: 'jquery',
+      THREE: 'three'
     })
   ],
   devServer: {
@@ -40,6 +41,7 @@ var config = {
   },
   resolve: {
     alias: extend(alias, {
+      assets: path.resolve(__dirname, 'assets/'),
       vendor: path.resolve(__dirname, 'vendor/'),
       src: path.resolve(__dirname, 'src/'),
     })

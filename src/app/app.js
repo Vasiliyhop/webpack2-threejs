@@ -3,7 +3,7 @@ define([
 	], function(game){
 	var app = {
 		start: function(){
-			game.start();
+			game.before();
 		}
 	};
 
