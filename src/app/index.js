@@ -1,7 +1,7 @@
-require("../index.html");
+require("index");
 
 define([
-	'./app'
+	'app'
 	], function(app){
-		app.init();
+		app.start();
 	});

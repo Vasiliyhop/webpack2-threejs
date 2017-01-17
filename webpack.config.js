@@ -1,6 +1,8 @@
 var webpack = require('webpack');
 var path = require('path');
 var PathRewriter = require('webpack-path-rewriter');
+var alias = require('./alias');
+var extend = require('util')._extend;
 
 var BUILD_DIR = path.resolve(__dirname, 'build');
 var APP_DIR = path.resolve(__dirname, 'src');
@@ -30,16 +32,17 @@ var config = {
     })
   ],
   devServer: {
-        port: 8080,
-        host: 'localhost',
-        historyApiFallback: {
-            index: 'index.html'
-        }
+    port: 8080,
+    host: 'localhost',
+    historyApiFallback: {
+      index: 'index.html'
+    }
   },
   resolve: {
-    alias: {
-      vendor: path.resolve(__dirname, 'vendor/')
-    }
+    alias: extend(alias, {
+      vendor: path.resolve(__dirname, 'vendor/'),
+      src: path.resolve(__dirname, 'src/'),
+    })
   },
 };
 
