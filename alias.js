@@ -5,5 +5,6 @@ module.exports = {
 	three$: 'vendor/three.min',
 	colladaLoader$: 'vendor/ColladaLoader',
 	loader$: 'src/app/loader',
+	assets$: 'src/app/assets',
 	datgui$: 'vendor/dat.gui.min'
 };

@@ -1,8 +1,10 @@
 define([
 	'datgui',
-	'loader'
-	], function(dat, loader){
+	'loader',
+	'assets'
+	], function(dat, loader, assets){
 	var game = {
+		assets: {},
 		before: function() {
 			game.load();
 		},
@@ -12,7 +14,7 @@ define([
 			game.render();
 		},
 		load: function() {
-			loader.load(game);
+			loader.loadAssets(game, assets);
 		},
 		init: function() {
 			game.width = window.innerWidth,
@@ -30,8 +32,10 @@ define([
 			game.renderer.shadowMap.type = THREE.PCFShadowMap;
 		},
 		create: function() {
-			//dae
-			game.scene.add(game.dae);
+			//assets
+			for (var name in game.assets) {
+				game.scene.add(game.assets[name]);
+			};
 
 			//axis
 			var axis = new THREE.AxisHelper(10);
@@ -89,9 +93,9 @@ define([
 			game.container.append(game.renderer.domElement);
 		},
 		render: function() {
-		 	game.monkey.rotation.x += game.guiControls.rotationX;
-		    game.monkey.rotation.y += game.guiControls.rotationY;
-		    game.monkey.rotation.z += game.guiControls.rotationZ;
+		 	game.assets.monkey1.rotation.x += game.guiControls.rotationX;
+		    game.assets.monkey1.rotation.y += game.guiControls.rotationY;
+		    game.assets.monkey1.rotation.z += game.guiControls.rotationZ;
 
 		    requestAnimationFrame( game.render );
 		    game.renderer.render( game.scene, game.camera );
