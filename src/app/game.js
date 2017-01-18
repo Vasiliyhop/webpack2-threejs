@@ -2,7 +2,8 @@ define([
 	'datgui',
 	'loader',
 	'assets',
-	'trackballControls'
+	'trackballControls',
+	'pointerLock'
 	], function(dat, loader, assets){
 	var game = {
 		assets: {},
