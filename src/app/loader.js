@@ -17,6 +17,8 @@ define([
 				} else if (asset.type === 'sound') {
 					game.assets[asset.id] = asset;
 					loader.loadAudio(listener, asset, def);
+				} else if (asset.type === 'scene') {
+					loader.loadScene(game, asset, def);
 				}
 			});
 			$.when.apply(null, defs).done(function(){
@@ -50,6 +52,36 @@ define([
 				asset.listener = listener;
 				asset.instance = sound;
 				def.resolve();
+			});
+		},
+		loadScene: function(game, asset, def) {
+			var loader = new THREE.ColladaLoader();
+			loader.options.convertUpAxis = true;
+			loader.load('assets/' + asset.src, function(collada){
+				var scale = asset.scale || 1,
+					positionX = asset.position[0] || 0,
+					positionY = asset.position[1] || 0,
+					positionZ = asset.position[2] || 0;
+				collada.scene.position.set(positionX, positionY, positionZ);
+				collada.scene.scale.set(scale, scale, scale);
+				game.assets[asset.id] = asset;
+				asset.instance = collada.scene;
+				collada.scene.traverse(function(child){
+					child.traverse(function(e){
+						e.castShadow = true;
+						e.receiveShadow = true;
+						if (e.material instanceof THREE.MeshPhongMaterial) {
+							e.material.needsUpdate = true;
+						}
+					});
+					
+				});
+				collada.scene.updateMatrix();
+				if (def) {
+					def.resolve();
+				} else {
+					game.start();
+				}
 			});
 		},
 		loadModel: function(game, asset, def) {

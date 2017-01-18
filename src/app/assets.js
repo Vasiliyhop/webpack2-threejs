@@ -13,7 +13,7 @@ module.exports = [
 		name: 'Suzanne',
 		id: 'monkey2',
 		scale: 4,
-		position: [20 , 6, 6]
+		position: [20 , 6, -6]
 	},
 	{
 		type: 'model',
@@ -22,6 +22,30 @@ module.exports = [
 		id: 'monkey3',
 		scale: 3,
 		position: [-20 , 6, -6]
+	},
+	{
+		type: 'model',
+		src: 'models/cube.dae',
+		name: 'Cube',
+		id: 'cube',
+		scale: 3,
+		position: [-1 , 3, 15]
+	},
+	{
+		type: 'model',
+		src: 'models/torus.dae',
+		name: 'Torus',
+		id: 'torus',
+		scale: 5,
+		position: [18 , 3, 18]
+	},
+	{
+		type: 'scene',
+		src: 'scenes/scene1.dae',
+		name: 'Scene',
+		id: 'scene',
+		scale: 3,
+		position: [-10 , 3, 34]
 	},
 	{
 		type: 'texture',

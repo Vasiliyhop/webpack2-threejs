@@ -1,7 +1,8 @@
 define([
 	'datgui',
 	'loader',
-	'assets'
+	'assets',
+	'trackballControls'
 	], function(dat, loader, assets){
 	var game = {
 		assets: {},
@@ -35,7 +36,7 @@ define([
 			//assets
 			for (var name in game.assets) {
 				var asset = game.assets[name];
-				if (asset.type === 'model') {
+				if (asset.type === 'model' || asset.type === 'scene') {
 					game.scene.add(asset.instance);
 				}
 			};
@@ -103,6 +104,10 @@ define([
 			if (game.assets.sound.distance) {
 				game.assets[game.assets.sound.source].instance.add(game.assets.sound.instance);
 			}
+
+
+			game.controls = new THREE.TrackballControls( game.camera );
+			game.controls.target.set( 0, 0, 0 );
 		},
 		render: function() {
 			//rotate monkey
@@ -118,9 +123,9 @@ define([
 		    if (!game.guiControls.playSound && sound.isPlaying) {
 		    	game.assets.sound.instance.pause();
 		    }
-
-		    requestAnimationFrame( game.render );
 		    game.renderer.render( game.scene, game.camera );
+		    requestAnimationFrame(game.render);
+		    game.controls.update();
 		}
 	};
 

@@ -4,6 +4,7 @@ module.exports = {
 	game$: 'src/app/game',
 	three$: 'vendor/three.min',
 	colladaLoader$: 'vendor/ColladaLoader',
+	trackballControls$: 'vendor/TrackballControls',
 	loader$: 'src/app/loader',
 	assets$: 'src/app/assets',
 	datgui$: 'vendor/dat.gui.min'
