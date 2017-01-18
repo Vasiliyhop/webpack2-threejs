@@ -3,21 +3,56 @@ define([
 	], function() {
 	var loader = {
 		loadAssets: function(game, assets) {
+			var texLoader = new THREE.TextureLoader();
+			var listener = new THREE.AudioListener();
 			var defs = [];
 			assets.forEach(function(asset){
 				var def = $.Deferred();
 				defs.push(def);
-				//TODO manage types
 				if (asset.type === 'model') {
-					loader.load(game, asset, def);
+					loader.loadModel(game, asset, def);
+				} else if (asset.type === 'texture') {
+					game.assets[asset.id] = asset;
+					loader.loadTexture(texLoader, asset, def);
+				} else if (asset.type === 'sound') {
+					game.assets[asset.id] = asset;
+					loader.loadAudio(listener, asset, def);
 				}
 			});
 			$.when.apply(null, defs).done(function(){
 				game.start();
 			});
-			//var tex = THREE.ImageUtils.loadTexture( textureURL );
 		},
-		load: function(game, asset, def) {
+		loadTexture: function(texLoader, asset, def) {
+			texLoader.load('assets/' + asset.src, 
+				function(texture){
+					asset.instance = texture;
+					def.resolve();
+				});
+		},
+		loadAudio: function(listener, asset, def) {
+			var sound;
+			if (asset.distance) {
+				sound = new THREE.PositionalAudio( listener );
+			} else {
+				sound = new THREE.Audio( listener );
+			}
+
+			var audioLoader = new THREE.AudioLoader();
+
+			audioLoader.load('assets/' + asset.src, function(buffer) {
+				sound.setBuffer(buffer);
+				sound.setLoop(asset.setLoop);
+				sound.setVolume(asset.volume);
+				if (asset.distance) {
+					sound.setRefDistance(asset.distance);
+				}
+				asset.listener = listener;
+				asset.instance = sound;
+				def.resolve();
+			});
+		},
+		loadModel: function(game, asset, def) {
 			var loader = new THREE.ColladaLoader();
 			loader.options.convertUpAxis = true;
 			loader.load('assets/' + asset.src, function(collada){
@@ -33,7 +68,8 @@ define([
 					} else {
 						child.position.set(positionX, positionY, positionZ);
 						child.scale.set(scale, scale, scale);
-						game.assets[asset.id] = child;
+						game.assets[asset.id] = asset;
+						asset.instance = child;
 						child.traverse(function(e){
 							e.castShadow = true;
 							e.receiveShadow = true;
@@ -47,8 +83,6 @@ define([
 					collada.scene.remove(object);
 				});
 				collada.scene.updateMatrix();
-				//TODO different behavior for types
-				//game.dae = collada.scene;
 				if (def) {
 					def.resolve();
 				} else {

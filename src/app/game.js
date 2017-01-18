@@ -34,7 +34,10 @@ define([
 		create: function() {
 			//assets
 			for (var name in game.assets) {
-				game.scene.add(game.assets[name]);
+				var asset = game.assets[name];
+				if (asset.type === 'model') {
+					game.scene.add(asset.instance);
+				}
 			};
 
 			//axis
@@ -83,19 +86,38 @@ define([
 				this.rotationX = 0.00001;
 				this.rotationY = 0.01;
 				this.rotationZ = 0.00001;
+				this.playSound = false;
 			};
 			datGUI = new dat.GUI();
 			datGUI.add(game.guiControls, 'rotationX', -0.1, 0.1);
 			datGUI.add(game.guiControls, 'rotationY', -0.1, 0.1);
 			datGUI.add(game.guiControls, 'rotationZ', -0.1, 0.1);
+			datGUI.add(game.guiControls, 'playSound', false);
 
 			//append
 			game.container.append(game.renderer.domElement);
+
+			//sound
+			game.camera.add(game.assets.sound.listener);
+
+			if (game.assets.sound.distance) {
+				game.assets[game.assets.sound.source].instance.add(game.assets.sound.instance);
+			}
 		},
 		render: function() {
-		 	game.assets.monkey1.rotation.x += game.guiControls.rotationX;
-		    game.assets.monkey1.rotation.y += game.guiControls.rotationY;
-		    game.assets.monkey1.rotation.z += game.guiControls.rotationZ;
+			//rotate monkey
+		 	game.assets.monkey1.instance.rotation.x += game.guiControls.rotationX;
+		    game.assets.monkey1.instance.rotation.y += game.guiControls.rotationY;
+		    game.assets.monkey1.instance.rotation.z += game.guiControls.rotationZ;
+
+		    //sound
+		    var sound = game.assets.sound.instance;
+		    if (game.guiControls.playSound && !sound.isPlaying) {
+		    	game.assets.sound.instance.play();
+		    } 
+		    if (!game.guiControls.playSound && sound.isPlaying) {
+		    	game.assets.sound.instance.pause();
+		    }
 
 		    requestAnimationFrame( game.render );
 		    game.renderer.render( game.scene, game.camera );

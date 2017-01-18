@@ -22,5 +22,24 @@ module.exports = [
 		id: 'monkey3',
 		scale: 3,
 		position: [-20 , 6, -6]
+	},
+	{
+		type: 'texture',
+		src: 'textures/blocks.JPG',
+		id: 'blocks'
+	},
+	{
+		type: 'texture',
+		src: 'textures/blocks_normal.JPG',
+		id: 'blocks_n'
+	},
+	{
+		type: 'sound',
+		src: 'sounds/monkey.wav',
+		id: 'sound',
+		source: 'monkey1',
+		setLoop: true,
+		volume: 0.5,
+		distance: 10
 	}
 ];
