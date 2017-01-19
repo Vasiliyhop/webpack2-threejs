@@ -36,8 +36,23 @@ define([
 			loader.load(
 				'assets/' + asset.src,
 				function ( geometry, materials ) {
+					var isMorph = geometry.morphTargets.length > 0 ? true : false;
+					if (isMorph) {
+						materials.forEach(function(material){
+							material.morphTargets = true;
+						});
+					} 
+					
 					var material = new THREE.MultiMaterial(materials);
+					material.morphTargets = true;
 					var object = new THREE.Mesh(geometry, material);
+
+					if (isMorph) {
+						asset.mixer = new THREE.AnimationMixer(object);
+						var clip = THREE.AnimationClip.CreateFromMorphTargetSequence( 'gallop', geometry.morphTargets, 30 );
+						asset.mixer.clipAction( clip ).setDuration( 1 ).play();
+					}
+
 					game.assets[asset.id] = asset;
 					var scale = asset.scale || 1,
 					positionX = asset.position[0] || 0,

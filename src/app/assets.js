@@ -17,11 +17,11 @@ module.exports = [
 	},
 	{
 		type: 'model',
-		src: 'models/monkey.dae',
+		src: 'models/anim.json',
 		name: 'Suzanne',
 		id: 'monkey2',
 		scale: 4,
-		position: [20 , 6, -6]
+		position: [20 , 6, 0]
 	},
 	{
 		type: 'model',

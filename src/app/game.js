@@ -109,6 +109,7 @@ define([
 
 			game.controls = new THREE.TrackballControls( game.camera );
 			game.controls.target.set( 0, 0, 0 );
+			game.prevTime = Date.now();
 		},
 		render: function() {
 			//rotate monkey
@@ -123,6 +124,15 @@ define([
 		    } 
 		    if (!game.guiControls.playSound && sound.isPlaying) {
 		    	game.assets.sound.instance.pause();
+		    }
+
+		    //TODO play anim for each animated
+		    if (game.assets.monkey2.mixer) {
+		    	//debugger;
+				var time = Date.now();
+				game.assets.monkey2.mixer.update( ( time - game.prevTime ) * 0.001 );
+
+				game.prevTime = time;
 		    }
 		    game.renderer.render( game.scene, game.camera );
 		    requestAnimationFrame(game.render);
