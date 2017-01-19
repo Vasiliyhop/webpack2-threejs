@@ -10,7 +10,12 @@ define([
 				var def = $.Deferred();
 				defs.push(def);
 				if (asset.type === 'model') {
-					loader.loadModel(game, asset, def);
+					var ext = asset.src.split('.')[1];
+					if (ext === 'dae') {
+						loader.loadModel(game, asset, def);
+					} else if (ext === 'json') {
+						loader.loadJSON(game, asset, def);
+					}
 				} else if (asset.type === 'texture') {
 					game.assets[asset.id] = asset;
 					loader.loadTexture(texLoader, asset, def);
@@ -24,6 +29,28 @@ define([
 			$.when.apply(null, defs).done(function(){
 				game.start();
 			});
+		},
+		loadJSON: function(game, asset, def) {
+			var loader = new THREE.JSONLoader();
+
+			loader.load(
+				'assets/' + asset.src,
+				function ( geometry, materials ) {
+					var material = new THREE.MultiMaterial(materials);
+					var object = new THREE.Mesh(geometry, material);
+					game.assets[asset.id] = asset;
+					var scale = asset.scale || 1,
+					positionX = asset.position[0] || 0,
+					positionY = asset.position[1] || 0,
+					positionZ = asset.position[2] || 0;
+					object.position.set(positionX, positionY, positionZ);
+					object.scale.set(scale, scale, scale);
+					object.castShadow = true;
+					object.receiveShadow = true;
+					asset.instance = object;
+					def.resolve();
+				}
+			);
 		},
 		loadTexture: function(texLoader, asset, def) {
 			texLoader.load('assets/' + asset.src, 

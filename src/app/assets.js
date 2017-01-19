@@ -1,6 +1,14 @@
 module.exports = [
 	{
 		type: 'model',
+		src: 'models/exported.json',
+		name: 'Suzanne',
+		id: 'monkey0',
+		scale: 6,
+		position: [10 , 4, -12]
+	},
+	{
+		type: 'model',
 		src: 'models/monkey.dae',
 		name: 'Suzanne',
 		id: 'monkey1',
